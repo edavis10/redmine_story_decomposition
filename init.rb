@@ -3,6 +3,8 @@ require 'redmine'
 require_dependency 'scrum_alliance/redmine/story_task_extensions'
 require_dependency 'scrum_alliance/redmine/version_moving_extension'
 
+require_dependency 'story_decomposition_issue_relation_patch'
+
 require_dependency 'story_decomposition_issue_hook'
 
 require 'dispatcher'
