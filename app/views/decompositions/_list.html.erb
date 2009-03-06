@@ -4,16 +4,16 @@
 
 <h2>Task Decomposition - <%= link_to_issue(@issue) %>: <%= @issue.subject %></h2>
 
-<% form_for :decomposition, :url => {:action => 'create', :id => @issue.id }, 
-  :html => {:id => "decomposition_form", 'data-url' => url_for(:controller => 'decompositions', :action => 'new', :id => @issue.id) } do |form| %>
-  
-  <% if @issues && @issues.any? -%>
-    <%= render :partial => 'issue', :collection => @issues %>
-  <% else -%>
-    <%= render :partial => 'issue', :collection => @issue.tasks %>
-  <% end -%>
-  
-  <%= form.submit "Save" %>
+<%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project)} %>
+<% if @issues && @issues.any? -%>
+    <table>
+      <tr>
+        <th><%= label :assigned_to_id %></th>
+        <th><%= label :tracker_id %></th>  
+        <th><%= label :subject %></th>
+      </tr>
+      <%= render :partial => 'decompositions/issue', :collection => @issue.tasks %>
+    </table>
 <% end -%>
 
 <% content_for :header_tags do %>

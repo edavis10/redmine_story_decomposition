@@ -1,8 +1,5 @@
 <fieldset id="<%= dom_id(issue) %>">
   <% fields_for (issue.new_record? ? 'issue[new][]' : 'issue[]'), issue do |ff| %>
-    <% @issue = issue -%>
-    <%= error_messages_for(:issue) %>
-  
     <table>
       <tr>
         <th><%= ff.label :assigned_to_id %></th>
@@ -14,7 +11,7 @@
       </tr>
       <tr>
         <td>
-          <%= ff.select :assigned_to_id, (@issue.assignable_users.collect {|m| [m.name, m.id]}), :include_blank => true %>
+          <%= ff.select :assigned_to_id, (issue.assignable_users.collect {|m| [m.name, m.id]}), :include_blank => true %>
         </td>
         <td>
           <%= ff.select :tracker_id, @project.trackers.collect {|t| [t.name, t.id]}, :required => true %>
