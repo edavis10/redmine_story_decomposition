@@ -1,29 +1,28 @@
 <fieldset id="<%= dom_id(issue) %>">
-  <span class="titular">
-    <% if issue.new_record? %>
-      New Task
-      <%= link_to_function "&nbsp;", "if (confirm('Are you sure?')) { this.up('fieldset').remove() }", :class => 'icon icon-del' %>
-    <% else -%>
-      <%= link_to_issue(issue) %>
-      <%= link_to_remote "&nbsp;", :url => {:controller => 'issues', :action => 'destroy', :id => issue}, :confirm => l(:text_are_you_sure), :method => :post, :html => {:class => 'icon icon-del'}, :complete => "$('#{dom_id(issue)}').remove()" %>
-    <% end -%>
-  </span>
-  
   <% fields_for (issue.new_record? ? 'issue[new][]' : 'issue[]'), issue do |ff| %>
     <% @issue = issue -%>
     <%= error_messages_for(:issue) %>
   
-    <p>
-      <%= ff.label :subject %>
-      <%= ff.text_field :subject, :class => 'subject' %>
-
-      <%= ff.label :estimate %>
-      <%= ff.text_field :estimated_hours, :class => 'estimated_hours' %>
-
-      <%= ff.label :category %>
-      <%= ff.select :category_id, @project.issue_categories.map {|category| [category.name, category.id] }, :include_blank => true %>
-    </p>
-
-    <p class="description"><%= ff.text_area :description %></p>
+    <table>
+      <tr>
+        <th><%= ff.label :assigned_to_id %></th>
+        <th><%= ff.label :tracker_id %></th>  
+        <th><%= ff.label :subject %></th>
+    <%# TODO: Custom field - estimate low %>
+    <%# TODO: Custom field - estimate high %>
+    <%# TODO: Custom field - need estimate %>
+      </tr>
+      <tr>
+        <td>
+          <%= ff.select :assigned_to_id, (@issue.assignable_users.collect {|m| [m.name, m.id]}), :include_blank => true %>
+        </td>
+        <td>
+          <%= ff.select :tracker_id, @project.trackers.collect {|t| [t.name, t.id]}, :required => true %>
+        </td>
+        <td>
+          <%= ff.text_field :subject, :class => 'subject' %>
+        </td>
+      </tr>
+    </table>
   <% end -%>
 </fieldset>

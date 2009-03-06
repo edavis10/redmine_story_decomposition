@@ -9,7 +9,7 @@ class DecompositionsController < ApplicationController
   end
   
   def new
-    render :partial => 'issue', :object => Issue.new
+    render :partial => 'issue', :object => Issue.new(:project => @project)
   end
   
   def create
