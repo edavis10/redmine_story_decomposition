@@ -1,8 +1,4 @@
-<div class="contextual">
-  <%= link_to "Add task", "#", :id => 'addTaskLink', :class => 'icon icon-add' %>
-</div>
-
-<h2>Task Decomposition - <%= link_to_issue(@issue) %>: <%= @issue.subject %></h2>
+<h2>Task Estimate</h2>
 
 <%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project)} %>
 <% if @issues && @issues.any? -%>
