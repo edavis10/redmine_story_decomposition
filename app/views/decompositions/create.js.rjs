@@ -1,3 +1,2 @@
 # TODO: Should replace the list
-page.alert @issue.id
-page.alert @relation.id
+page.alert @child_issue

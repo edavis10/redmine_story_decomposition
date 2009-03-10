@@ -13,27 +13,21 @@ class DecompositionsController < ApplicationController
   end
   
   def create
-    if params[:issue][:new]
-      @issue = Issue.new(params[:issue][:new])
-      @issue.project = @project
-      @issue.author = User.current
-
-      @parent_issue = Issue.find(params[:id])
-      @relation = IssueRelation.new(:relation_type => IssueRelation::TYPE_COMPOSES)
-      @relation.issue_from_id = @parent_issue.id
+    if params[:issue] && params[:issue][:new]
+      @child_issue = build_child_issue
+      successful_save = @child_issue.save_as_subissue_of(current_issue) do |issue|
+        issue.attributes = params[:issue][:new]
+      end
 
       respond_to do |format|
-        Issue.transaction do
-          begin
-            @issue.save!
-            @relation.issue_to_id = @issue.id
-            @relation.save!
-            format.js
-          rescue ActiveRecord::RecordInvalid
-            format.js { render :action => :create_error }
-          end
+        if successful_save
+          format.js
+        else
+          format.js { render :action => :create_error, :status => :error }
         end
-      end # respond_to
+      end
+    else
+      render :nothing => true
     end
   end
   
@@ -41,5 +35,13 @@ private
   def find_issue_and_project
     @issue = Issue.find(params[:id])
     @project = @issue.project
+  end
+
+  def current_issue
+    @issue
+  end
+
+  def build_child_issue
+    Issue.new
   end
 end
