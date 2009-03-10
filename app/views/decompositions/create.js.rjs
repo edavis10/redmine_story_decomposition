@@ -1,0 +1,3 @@
+# TODO: Should replace the list
+page.alert @issue.id
+page.alert @relation.id

@@ -1,5 +1,5 @@
 <fieldset id="<%= dom_id(issue) %>">
-  <% fields_for (issue.new_record? ? 'issue[new][]' : 'issue[]'), issue do |ff| %>
+  <% fields_for (issue.new_record? ? 'issue[new]' : 'issue[]'), issue do |ff| %>
     <table>
       <tr>
         <th><%= ff.label :assigned_to_id %></th>
@@ -25,6 +25,16 @@
 </fieldset>
 
 <div class="contextual">
-  <%= link_to "Add task", "#", :id => 'addTaskLink', :class => 'icon icon-add' %>
+  <%=
+    link_to_remote("Add task",
+                   { 
+                     :url => {:controller => 'decompositions', :action => 'create'},
+                     :with => "$('issue-form').serialize()"
+
+                   },
+                   {
+                     :id => 'addTaskLink',
+                     :class => 'icon icon-add'
+                   }) %>
 </div>
 

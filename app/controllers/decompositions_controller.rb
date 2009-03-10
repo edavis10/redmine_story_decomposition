@@ -13,38 +13,28 @@ class DecompositionsController < ApplicationController
   end
   
   def create
-    task_tracker = @project.trackers.find_by_name('Task')
+    if params[:issue][:new]
+      @issue = Issue.new(params[:issue][:new])
+      @issue.project = @project
+      @issue.author = User.current
 
-    @issues = []
-    @new_issues = []
-    
-    Issue.transaction do
-      Array(params[:issue]).each do |key, value|
-        if 'new' == key.to_s
-          value.each do |attrs|
-            issue = @project.issues.create(attrs.merge(:tracker_id => task_tracker.id, :author => User.current, :fixed_version_id => @issue.fixed_version_id))
-            @issues << issue
-            @new_issues << issue
+      @parent_issue = Issue.find(params[:id])
+      @relation = IssueRelation.new(:relation_type => IssueRelation::TYPE_COMPOSES)
+      @relation.issue_from_id = @parent_issue.id
+
+      respond_to do |format|
+        Issue.transaction do
+          begin
+            @issue.save!
+            @relation.issue_to_id = @issue.id
+            @relation.save!
+            format.js
+          rescue ActiveRecord::RecordInvalid
+            format.js { render :action => :create_error }
           end
-        else
-          issue = Issue.find(key)
-          issue.update_attributes(value.merge(:fixed_version_id => @issue.fixed_version_id))
-          @issues << issue
         end
-      end
-
-      @issues.each {|issue| issue.save }
-      @new_issues.each do |issue|
-        IssueRelation.create(:issue_to_id => issue.id, :issue_from_id => @issue.id, :relation_type => 'composes')
-      end
+      end # respond_to
     end
-    
-    raise DecompositionException unless @issues.all?(&:valid?)
-    
-    flash[:notice] = "Tickets saved. You're #{%w[awesome magnificent wonderful super-duper lovely fun neat-o peachy-keen rockin'].sort_by {rand}.first}!"
-    redirect_to :action => 'index', :id => @issue.id
-  rescue DecompositionException => exception
-    render :action => 'index'
   end
   
 private
