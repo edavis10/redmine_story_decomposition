@@ -1,17 +1,17 @@
 <tr>
-  <td>
+  <td class="status">
     <%= h issue.status %>
   </td>
-  <td>
+  <td class="assigned_to">
     <%= h issue.assigned_to %>
   </td>
-  <td>
+  <td class="tracker">
     <%= h issue.tracker %>
   </td>
-  <td>
-    <%= h issue.subject %>
+  <td class="subject">
+    <%= link_to(h(issue.subject), :controller => 'issues', :action => 'show', :id => issue) %>
   </td>
-  <td>
+  <td class="spent-time">
     <%= h issue.spent_hours %>
   </td>
 </tr>
