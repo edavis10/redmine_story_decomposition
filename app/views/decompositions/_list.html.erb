@@ -1,7 +1,6 @@
 <h2>Task Estimate</h2>
 
 <%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project)} %>
-<% if @issue && @issue.tasks.any? -%>
   <fieldset>
     <table id="subtasks" class="decomposition">
       <tr>
@@ -15,11 +14,12 @@
     <%# TODO: Custom field - need estimate %>
       </tr>
       <tbody id="subtasks_body">
+      <% if @issue && @issue.tasks.any? -%>
       <%= render :partial => 'decompositions/issue', :collection => @issue.tasks %>
+      <% end -%>
       </tbody>
     </table>
   </fieldset>
-<% end -%>
 
 <% content_for :header_tags do %>
   <style type="text/css" media="screen">
