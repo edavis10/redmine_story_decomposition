@@ -1,6 +1,6 @@
 <fieldset id="<%= dom_id(issue) %>">
   <% fields_for (issue.new_record? ? 'issue[new]' : 'issue[]'), issue do |ff| %>
-    <table>
+    <table class="decomposition">
       <tr>
         <th><%= ff.label :assigned_to_id %></th>
         <th><%= ff.label :tracker_id %></th>  
@@ -22,19 +22,18 @@
       </tr>
     </table>
   <% end -%>
-</fieldset>
 
-<div class="contextual">
+  <div class="contextual">
   <%=
     link_to_remote("Add task",
                    { 
                      :url => {:controller => 'decompositions', :action => 'create'},
                      :with => "$('issue-form').serialize()"
-
                    },
                    {
                      :id => 'addTaskLink',
                      :class => 'icon icon-add'
                    }) %>
-</div>
+  </div>
+</fieldset>
 
