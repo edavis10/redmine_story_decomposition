@@ -3,7 +3,7 @@
 <%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project)} %>
 <% if @issue && @issue.tasks.any? -%>
   <fieldset>
-    <table class="decomposition">
+    <table id="subtasks" class="decomposition">
       <tr>
         <th><%= l(:field_status) %></th>
         <th><%= l(:field_assigned_to) %></th>
@@ -14,7 +14,9 @@
     <%# TODO: Custom field - estimate high %>
     <%# TODO: Custom field - need estimate %>
       </tr>
+      <tbody id="subtasks_body">
       <%= render :partial => 'decompositions/issue', :collection => @issue.tasks %>
+      </tbody>
     </table>
   </fieldset>
 <% end -%>

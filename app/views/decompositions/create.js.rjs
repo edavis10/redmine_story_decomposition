@@ -1,2 +1,3 @@
-# TODO: Should replace the list
-page.alert @child_issue
+page.insert_html :top, "subtasks_body", :partial => 'decompositions/issue', :object => @child_issue
+
+page.visual_effect :highlight, "subtask_#{@child_issue.id}"
