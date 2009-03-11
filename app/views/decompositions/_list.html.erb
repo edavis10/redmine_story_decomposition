@@ -1,15 +1,22 @@
 <h2>Task Estimate</h2>
 
 <%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project)} %>
-<% if @issues && @issues.any? -%>
-    <table>
+<% if @issue && @issue.tasks.any? -%>
+  <fieldset>
+    <table class="decomposition">
       <tr>
-        <th><%= label :assigned_to_id %></th>
-        <th><%= label :tracker_id %></th>  
-        <th><%= label :subject %></th>
+        <th><%= l(:field_status) %></th>
+        <th><%= l(:field_assigned_to) %></th>
+        <th><%= l(:field_tracker) %></th>  
+        <th><%= l(:field_subject) %></th>
+        <th><%= l(:field_spent_hours_formatted) %></th>
+    <%# TODO: Custom field - estimate low %>
+    <%# TODO: Custom field - estimate high %>
+    <%# TODO: Custom field - need estimate %>
       </tr>
       <%= render :partial => 'decompositions/issue', :collection => @issue.tasks %>
     </table>
+  </fieldset>
 <% end -%>
 
 <% content_for :header_tags do %>
@@ -24,6 +31,8 @@
         #decomposition_form fieldset span.titular .icon-del { padding-left: 10px; }
     #decomposition_form p { margin: 6px 0; }
     #decomposition_form #errorExplanation, #decomposition_form p { margin-left: 100px; }
+    table.decomposition { width: 100%; }
+    table.decomposition tr { text-align: center; }
   </style>
   
   <script type="text/javascript" charset="utf-8">
