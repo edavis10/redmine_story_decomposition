@@ -1,3 +1,9 @@
+<% # Setup fields for submisison on a new issue %>
+<% if issue.new_record? %>
+  <%= hidden_field_tag "subissue[][assigned_to_id]", issue.assigned_to_id %>
+  <%= hidden_field_tag "subissue[][tracker_id]", issue.tracker_id %>
+  <%= hidden_field_tag "subissue[][subject]", issue.subject %>
+<% end %>
 <tr id="subtask_<%= issue.id %>">
   <td class="status">
     <%= h issue.status %>

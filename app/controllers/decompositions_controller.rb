@@ -3,20 +3,29 @@ class DecompositionsController < ApplicationController
   
   unloadable
   
-  before_filter :find_issue_and_project, :authorize
+  before_filter :find_issue, :except => :new
+  before_filter :find_project
+  before_filter :authorize
   
   def index
   end
   
   def new
-    render :partial => 'issue', :object => Issue.new(:project => @project)
+    if params[:new_subissue]
+      @child_issue = build_child_issue
+      @child_issue.attributes = params[:new_subissue]
+
+      respond_to do |format|
+        format.js
+      end
+    end
   end
   
   def create
-    if params[:issue] && params[:issue][:new]
+    if params[:new_subissue]
       @child_issue = build_child_issue
       successful_save = @child_issue.save_as_subissue_of(current_issue) do |issue|
-        issue.attributes = params[:issue][:new]
+        issue.attributes = params[:new_subissue]
       end
 
       respond_to do |format|
@@ -30,11 +39,15 @@ class DecompositionsController < ApplicationController
       render :nothing => true
     end
   end
-  
+
 private
   def find_issue_and_project
     @issue = Issue.find(params[:id])
-    @project = @issue.project
+  end
+
+  def find_project
+    @project = @issue.project if @issue
+    @project ||= Project.find_by_id(params[:project_id])
   end
 
   def current_issue
