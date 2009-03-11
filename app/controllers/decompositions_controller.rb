@@ -23,7 +23,7 @@ class DecompositionsController < ApplicationController
         if successful_save
           format.js
         else
-          format.js { render :action => :create_error, :status => :error }
+          format.js { render :action => :create_error, :status => 500 }
         end
       end
     else
