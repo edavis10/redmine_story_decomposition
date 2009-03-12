@@ -4,6 +4,15 @@ class StoryDecompositionIssueHook  < Redmine::Hook::ViewListener
   end
 
   def controller_issues_new_after_save(context = { })
-    # TODO: Save subissues to the parent
+    if context[:params] && context[:params][:subissue] && context[:issue]
+      context[:params][:subissue].each do |subissue_params|
+        @child_issue = Issue.new
+        @child_issue.save_as_subissue_of(context[:issue]) do |issue|
+          issue.attributes = subissue_params
+        end
+      end
+    end
+
+    return ''
   end
 end
