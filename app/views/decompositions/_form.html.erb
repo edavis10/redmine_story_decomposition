@@ -1,11 +1,3 @@
-<% 
-custom_field_ids = Setting.plugin_redmine_story_decomposition['custom_fields'] 
-if custom_field_ids
-  custom_fields = CustomField.find(custom_field_ids)
-else
-  custom_fields = []
-end
-%>
 <fieldset id="<%= dom_id(issue) %>">
   <% fields_for (issue.new_record? ? 'new_subissue' : 'subissue[]'), issue do |ff| %>
     <table class="decomposition">
@@ -13,12 +5,9 @@ end
         <th><%= ff.label :assigned_to_id %></th>
         <th><%= ff.label :tracker_id %></th>  
         <th><%= ff.label :subject %></th>
-    <%# TODO: Custom field - estimate low %>
-    <%# TODO: Custom field - estimate high %>
-    <%# TODO: Custom field - need estimate %>
-    <% custom_fields.each do |field| %>
-      <th><%= field.name %></th>
-    <% end %>
+        <% custom_fields.each do |field| %>
+        <th><%= h field.name %></th>
+        <% end %>
       </tr>
       <tr>
         <td>

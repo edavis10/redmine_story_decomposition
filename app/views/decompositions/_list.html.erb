@@ -1,6 +1,14 @@
+<% 
+custom_field_ids = Setting.plugin_redmine_story_decomposition['custom_fields'] 
+if custom_field_ids
+  custom_fields = CustomField.find(custom_field_ids)
+else
+  custom_fields = []
+end
+%>
 <h2>Task Estimate</h2>
 
-<%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project)} %>
+<%= render :partial => 'decompositions/form', :locals => {:issue => Issue.new(:project => @project), :custom_fields => custom_fields} %>
   <fieldset>
     <table id="subtasks" class="decomposition">
       <tr>
@@ -9,13 +17,13 @@
         <th><%= l(:field_tracker) %></th>  
         <th><%= l(:field_subject) %></th>
         <th><%= l(:field_spent_hours_formatted) %></th>
-    <%# TODO: Custom field - estimate low %>
-    <%# TODO: Custom field - estimate high %>
-    <%# TODO: Custom field - need estimate %>
+        <% custom_fields.each do |field| %>
+        <th><%= h field.name %></th>
+        <% end %>
       </tr>
       <tbody id="subtasks_body">
       <% if @issue && @issue.tasks.any? -%>
-      <%= render :partial => 'decompositions/issue', :collection => @issue.tasks %>
+      <%= render :partial => 'decompositions/issue', :collection => @issue.tasks, :locals => {:custom_fields => custom_fields } %>
       <% end -%>
       </tbody>
     </table>

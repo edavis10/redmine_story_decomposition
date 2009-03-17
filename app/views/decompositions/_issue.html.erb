@@ -20,4 +20,9 @@
   <td class="spent-time">
     <%= h issue.spent_hours %>
   </td>
+  <% custom_fields.each do |field| %>
+  <td>
+    <%= show_value(issue.custom_value_for(field)) %>
+  </td>
+  <% end %>
 </tr>
