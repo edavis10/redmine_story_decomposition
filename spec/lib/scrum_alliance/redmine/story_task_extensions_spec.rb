@@ -55,3 +55,36 @@ describe Issue, 'tasks' do
     
   end
 end
+
+describe Issue, 'done_ratio for non parent tasks' do
+  it 'should use the done_ratio field' do
+    issue = Issue.new(:done_ratio => 50)
+    issue.should_receive(:tasks).and_return([])
+    issue.done_ratio.should eql(50)
+  end
+end
+
+describe Issue, '#done_ratio for parent tasks' do
+  describe 'with estimates' do
+    it 'should be the weighted average of the estimates and the child tasks done_ratios' do
+      issue = Issue.new
+      child_one = mock_model(Issue, :estimated_hours => 10, :done_ratio => 0)
+      child_two = mock_model(Issue, :estimated_hours => 90,:done_ratio => 5)
+
+      issue.should_receive(:tasks).at_least(:once).and_return([child_one, child_two])
+      issue.done_ratio.should eql(5)
+
+    end
+  end
+
+  describe 'without estimates' do
+    it 'should be zero' do
+      issue = Issue.new
+      child_one = mock_model(Issue, :estimated_hours => nil)
+      child_two = mock_model(Issue, :estimated_hours => 0)
+
+      issue.should_receive(:tasks).at_least(:once).and_return([child_one, child_two])
+      issue.done_ratio.should eql(0)
+    end
+  end
+end
