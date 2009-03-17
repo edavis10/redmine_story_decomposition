@@ -40,22 +40,4 @@
     .tabular table.decomposition label { margin-left: 0 }
   </style>
   
-  <script type="text/javascript" charset="utf-8">
-    var ScrumAlliance = ScrumAlliance || {};
-    ScrumAlliance.Decomposer = Class.create({
-      initialize: function(formElement, addTaskLink) {
-        this.formElement = $(formElement);
-        this.dataUrl = this.formElement.readAttribute('data-url')
-        $(addTaskLink).observe('click', this.addTask.bind(this));
-      },
-      addTask: function() {
-        new Ajax.Updater(this.formElement, this.dataUrl, {method: 'get', insertion: 'top'});
-        return false;
-      }
-    });
-    
-    document.observe("dom:loaded", function() {
-      new ScrumAlliance.Decomposer('decomposition_form', 'addTaskLink');
-    });
-  </script>
 <% end -%>
