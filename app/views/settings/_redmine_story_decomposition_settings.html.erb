@@ -1,10 +1,11 @@
 <% custom_fields = IssueCustomField.find :all %>
+<% current_fields = @settings['custom_fields'].nil? ? [] : @settings['custom_fields'].collect(&:to_i) %>
 
 <p><label>Use custom data fields</label>
 <%= select_tag('settings[custom_fields]',
                options_from_collection_for_select(custom_fields,
                                                   :id,
                                                   :name,
-                                                  @settings['custom_fields'].collect(&:to_i)),
+                                                  current_fields),
                { :multiple => true, :size => custom_fields.size }) %>
 </p>
