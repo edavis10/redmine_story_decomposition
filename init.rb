@@ -21,4 +21,6 @@ Redmine::Plugin.register :redmine_story_decomposition do
   version '0.0.1'
   
   permission :decompose_story, { :decompositions => [:index, :new, :create] }, :public => true
+
+  settings :default => {'custom_fields' => ''}, :partial => 'settings/redmine_story_decomposition_settings'
 end
