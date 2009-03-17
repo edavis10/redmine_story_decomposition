@@ -41,7 +41,7 @@ class DecompositionsController < ApplicationController
   end
 
 private
-  def find_issue_and_project
+  def find_issue
     @issue = Issue.find(params[:id])
   end
 
