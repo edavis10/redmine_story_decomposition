@@ -2,6 +2,8 @@ class DecompositionsController < ApplicationController
   class DecompositionException < RuntimeError; end
   
   unloadable
+
+  helper :custom_fields
   
   before_filter :find_issue, :except => :new
   before_filter :find_project
@@ -15,6 +17,8 @@ class DecompositionsController < ApplicationController
       @child_issue = build_child_issue
       @child_issue.attributes = params[:new_subissue]
 
+      @custom_fields = selected_custom_fields
+
       respond_to do |format|
         format.js
       end
@@ -27,6 +31,8 @@ class DecompositionsController < ApplicationController
       successful_save = @child_issue.save_as_subissue_of(current_issue) do |issue|
         issue.attributes = params[:new_subissue]
       end
+
+      @custom_fields = selected_custom_fields
 
       respond_to do |format|
         if successful_save
@@ -56,5 +62,14 @@ private
 
   def build_child_issue
     Issue.new
+  end
+
+  def selected_custom_fields
+    custom_field_ids = Setting.plugin_redmine_story_decomposition['custom_fields'] 
+      if custom_field_ids
+        return CustomField.find(custom_field_ids)
+      else
+        return []
+      end
   end
 end
